@@ -4,9 +4,15 @@ import {formatMoney} from '../../helpers/index.js'
 
 const Resumen = () => {
 
-    const {order, total} = useQuiosco()
+    const {order, total, handleSubmitNewOrder} = useQuiosco()
 
     const checkOrder = () => order.length === 0
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        handleSubmitNewOrder()
+    }
 
     return (
         <aside className="w-72 h-screen overflow-y-scroll scrollbar-hide p-5">
@@ -27,7 +33,7 @@ const Resumen = () => {
                 Total: {formatMoney(total)}
             </p>
 
-            <form action="" className="w-full">
+            <form onSubmit={handleSubmit} className="w-full">
                 <div className="mt-5">
                     <button
                         type="submit"

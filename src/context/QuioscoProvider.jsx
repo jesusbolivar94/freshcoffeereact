@@ -40,6 +40,36 @@ const QuioscoProvider = ({children}) => {
         setProduct( product[0] )
     }
 
+    const handleSubmitNewOrder = async () => {
+
+        const token = localStorage.getItem('AUTH_TOKEN')
+
+        try {
+            const {data} = await clientAxios.post('/api/orders', {
+                total,
+                products: order.map(product => {
+                    return {
+                        id: product.id,
+                        quantity: product.quantity
+                    }
+                })
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            toast.success(data.message)
+
+            setTimeout(() => {
+                setOrder([])
+            }, 1000)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleAddOrder = ({category_id, image, ...product}) => {
         if ( order.some( orderState => orderState.id === product.id ) ) {
             const updateOrder = order.map( orderState => orderState.id === product.id ? product : orderState)
@@ -95,6 +125,7 @@ const QuioscoProvider = ({children}) => {
                 handleProductClick,
                 handleAddOrder,
                 handleDeleteProduct,
+                handleSubmitNewOrder
             }}>
             {children}
         </QuioscoContext.Provider>
